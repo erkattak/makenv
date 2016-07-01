@@ -1,0 +1,21 @@
+#!/bin/bash
+
+printf 'Lets do(t) this!\n'
+
+envfile=""
+
+keepgoing=true
+while [ keepgoing ]; do
+  read -p "Enter variable name [write .env]: " name
+  if [ -z "$name" -a "${name+xxx}" = "xxx" ]
+  then
+    break
+  else
+    read -p "Enter value for $name: " value
+    envfile+=$"$name"$'='$"$value"$'\n'
+  fi
+done
+echo "$envfile" > .env
+printf '\n.env file written\n'
+cat .env
+exit 0;
