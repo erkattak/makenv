@@ -2,20 +2,35 @@
 
 printf 'Lets do(t) this!\n'
 
-envfile=""
+while getopts ":e:" opt; do
+  case $opt in
+    e) env_name="$OPTARG"
+    ;;
+    *)
+    ;;
+  esac
+done
+
+envfile="# Generated environment file"
 
 keepgoing=true
 while [ keepgoing ]; do
-  read -p "Enter variable name [write .env]: " name
+  read -p "Enter variable name [done]: " name
   if [ -z "$name" -a "${name+xxx}" = "xxx" ]
   then
     break
   else
     read -p "Enter value for $name: " value
-    envfile+=$"$name"$'='$"$value"$'\n'
+    envfile+=$'\n'$"$name"$'='$"$value"
   fi
 done
-echo "$envfile" > .env
-printf '\n.env file written\n'
-cat .env
-exit 0;
+
+if [ -z ${env_name+x} ]; then
+  echo 'Writing .env file...'
+  echo "$envfile" > .env
+  cat .env
+else
+  echo "Writing .${env_name}.env file..."
+  echo "$envfile" > ".${env_name}.env"
+  cat ".${env_name}.env"
+fi
