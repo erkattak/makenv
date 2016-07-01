@@ -1,7 +1,12 @@
 #!/bin/bash
+# This script creates an environment file based on user input.
+# The default environment file is .env
+# Use "-e name" to name an environment and output as .name.env
+set -e
 
 printf 'Lets do(t) this!\n'
 
+# Check whether this is a named environment
 while getopts ":e:" opt; do
   case $opt in
     e) env_name="$OPTARG"
@@ -11,7 +16,7 @@ while getopts ":e:" opt; do
   esac
 done
 
-envfile="# Generated environment file"
+file_contents="# Generated environment file"
 
 keepgoing=true
 while [ keepgoing ]; do
@@ -21,16 +26,16 @@ while [ keepgoing ]; do
     break
   else
     read -p "Enter value for $name: " value
-    envfile+=$'\n'$"$name"$'='$"$value"
+    file_contents+=$'\n'$"$name"$'='$"$value"
   fi
 done
 
 if [ -z ${env_name+x} ]; then
   echo 'Writing .env file...'
-  echo "$envfile" > .env
+  echo "$file_contents" > .env
   cat .env
 else
   echo "Writing .${env_name}.env file..."
-  echo "$envfile" > ".${env_name}.env"
+  echo "$file_contents" > ".${env_name}.env"
   cat ".${env_name}.env"
 fi

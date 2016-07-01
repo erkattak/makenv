@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/bin/bash
+# This script reads an environment file and prepends the vars
+# to the given command.
+# Use "-e name" to read a named environment such as .name.env
 set -e
 
 while getopts ":e:" opt; do
